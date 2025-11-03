@@ -7,9 +7,12 @@ import GameCard from "@/components/GameCard";
 
 async function getData(title: string) {
     try {
+        const decodeTitle = decodeURIComponent(title);
+
         const data = await fetch(
-            `${process.env.NEXT_API_URL}/next-api/?api=game&title=${title}`
+            `${process.env.NEXT_API_URL}/next-api/?api=game&title=${decodeTitle}`
         );
+
         return data.json();
     } catch (err: unknown) {
         const errMessage = err instanceof Error ? err.message : String(err);
