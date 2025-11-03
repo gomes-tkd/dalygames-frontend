@@ -6,6 +6,40 @@ import RedirectTimer from "@/components/redirect-timer";
 import Container from "@/components/container";
 import Label from "@/app/game/[id]/components/label";
 import GameCard from "@/components/GameCard";
+import { Metadata } from "next";
+
+interface ParamProps {
+    params: Promise<{ id: string }>
+}
+
+export async function generateMetadata({ params }: ParamProps): Promise<Metadata> {
+    const { id } = await params;
+
+    try {
+        const response: GameProps = await fetch(
+            `${process.env.NEXT_API_URL}/next-api/?api=game&id=${id}`, { next: { revalidate: 60 } }
+        ).then((res) => res.json()).catch(() => {
+            return {
+                title: "Jogo não encontrado",
+                description: "O jogo que você está procurando não foi encontrado."
+            }
+        });
+
+        return {
+            title: response?.title,
+            description: `${response?.description.slice(0, 100)}`,
+            openGraph: {
+                title: response?.title,
+                images: [response?.image_url]
+            }
+        }
+    } catch (err: unknown) {
+        return {
+            title: "Jogo não encontrado",
+            description: "O jogo que você está procurando não foi encontrado."
+        }
+    }
+}
 
 async function getGameData(id: string) {
     try {
@@ -32,11 +66,7 @@ async function getGameSorted() {
     }
 }
 
-export default async function GameDetail({
-    params
-}: {
-    params: Promise<{ id: string }>
-}) {
+export default async function GameDetail({ params }: ParamProps) {
     const { id } = await params;
     const gameData: GameProps | null = await getGameData(id);
     const sortedGame:GameProps= await getGameSorted();

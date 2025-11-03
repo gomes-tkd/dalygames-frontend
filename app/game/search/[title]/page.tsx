@@ -4,6 +4,7 @@ import GameProps from "@/utils/types/game";
 import Container from "@/components/container";
 import Input from "@/components/input";
 import GameCard from "@/components/GameCard";
+import RedirectTimer from "@/components/redirect-timer";
 
 async function getData(title: string) {
     try {
@@ -27,6 +28,19 @@ export default async function Search({
 }) {
     const { title } = await params;
     const data: GameProps[] = await getData(title);
+
+    if (!data) {
+        return (
+            <main className={"w-full text-black"}>
+                <div className={"flex flex-col items-center justify-center h-screen"}>
+                    <p className={"text-center font-bold px-6"}>
+                        Jogo não encontrado. Redirecionando para a página inicial...
+                    </p>
+                    <RedirectTimer />
+                </div>
+            </main>
+        )
+    }
 
     return (
         <main className={"w-full text-black"}>
