@@ -4,27 +4,38 @@ import Link from "next/link";
 import Image from "next/image";
 import { BsArrowRightSquare } from "react-icons/bs";
 import Input from "@/components/input";
+import GameCard from "@/components/GameCard";
 
 async function getDalyGame() {
     try {
         const response = await fetch(
-            `${process.env.NEXT_API_URL}/next-api/?api=game_day`, { next: { revalidate: 320 }}
+            `${process.env.NEXT_API_URL}/next-api/?api=game_day`, { next: { revalidate: 320 } }
         );
 
         return response.json();
     } catch (err: unknown) {
         const errMessage = err instanceof Error ? err.message : String(err);
+        throw new Error("Failed to fetch data. Error: " + errMessage);
+    }
+}
 
-        console.error("Error fetching data: ", errMessage);
+async function getGameData() {
+    try {
+        const response = await fetch(
+            `${process.env.NEXT_API_URL}/next-api/?api=games`, { next: { revalidate: 320 } }
+        );
 
+        return response.json();
+    } catch (err: unknown) {
+        const errMessage = err instanceof Error ? err.message : String(err);
         throw new Error("Failed to fetch data. Error: " + errMessage);
     }
 }
 
 export default async function Home() {
     const dalyGame: GameProps = await getDalyGame();
+    const gameData: GameProps[] = await getGameData();
 
-    console.log(dalyGame);
     return (
         <main className="w-full">
             <Container>
@@ -61,6 +72,17 @@ export default async function Home() {
                     </section>
                 </Link>
                 <Input />
+                <h2 className={"text-lg font-bold mt-8 mb-5"}>Games para conheceres.</h2>
+                <section className={"grid gap-7 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"}>
+                    {
+                        gameData.map(game => (
+                            <GameCard
+                                key={game.id}
+                                data={game}
+                            />
+                        ))
+                    }
+                </section>
             </Container>
         </main>
     );

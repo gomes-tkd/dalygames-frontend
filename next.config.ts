@@ -7,7 +7,8 @@ const nextConfig: NextConfig = {
                 protocol: "https",
                 hostname: "sujeitoprogramador.com"
             }
-        ]
+        ],
+        qualities: [75, 100]
     }
 };
 
