@@ -3,6 +3,7 @@ import GameProps from "@/utils/types/game";
 import Link from "next/link";
 import Image from "next/image";
 import { BsArrowRightSquare } from "react-icons/bs";
+import Input from "@/components/input";
 
 async function getDalyGame() {
     try {
@@ -59,6 +60,7 @@ export default async function Home() {
                         </div>
                     </section>
                 </Link>
+                <Input />
             </Container>
         </main>
     );
