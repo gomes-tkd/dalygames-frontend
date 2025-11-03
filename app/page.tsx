@@ -74,14 +74,9 @@ export default async function Home() {
                 <Input />
                 <h2 className={"text-lg font-bold mt-8 mb-5"}>Games para conheceres.</h2>
                 <section className={"grid gap-7 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"}>
-                    {
-                        gameData.map(game => (
-                            <GameCard
-                                key={game.id}
-                                data={game}
-                            />
-                        ))
-                    }
+                    {gameData && (
+                        gameData.map(game => (<GameCard key={game.id} data={game}/>))
+                    )}
                 </section>
             </Container>
         </main>
